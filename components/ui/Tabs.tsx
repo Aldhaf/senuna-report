@@ -294,7 +294,6 @@ const Tabs: React.FC = () => {
           (tab) =>
             activeTab === tab.id && (
               <div key={tab.id}>
-                <h2>{tab.label}</h2>
                 {tab.content}
               </div>
             )
