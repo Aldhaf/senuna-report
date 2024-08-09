@@ -177,7 +177,6 @@ const Tabs: React.FC = () => {
       label: "Result and Interpretation",
       content: (
         <div>
-          <h1 className="text-lg font-medium text-gray-900">Result and Interpretation</h1>
           <table className="min-w-full text-left text-sm text-gray-500 mt-4">
             <thead>
               <tr>
@@ -318,7 +317,7 @@ const Tabs: React.FC = () => {
           (tab) =>
             activeTab === tab.id && (
               <div key={tab.id}>
-                <h2>{tab.label}</h2>
+                <h1>{tab.label}</h1>
                 {tab.content}
               </div>
             )
