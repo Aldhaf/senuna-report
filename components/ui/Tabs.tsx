@@ -17,16 +17,6 @@ type PatientInfo = {
   currentDiagnosis: string;
 };
 
-type Variant = {
-  gene: string;
-  variantDetail: string;
-  zygosity: string;
-  acmgClassification: string;
-  globalAlleleFrequency: string;
-  reviewerClassification: string;
-  description: string;
-};
-
 const initialPatientInfo: PatientInfo = {
   fullName: "Andi Saputra",
   sex: "Male",
@@ -35,39 +25,6 @@ const initialPatientInfo: PatientInfo = {
   medicalHistory: "No-Significant History",
   currentDiagnosis: "Type II Diabetes",
 };
-
-const initialVariants: Variant[] = [
-  {
-    gene: "MYH7",
-    variantDetail: "c.1503TC (p.Tyr501=)",
-    zygosity: "Heterozygous",
-    acmgClassification: "Likely Benign",
-    globalAlleleFrequency: "0.0005",
-    reviewerClassification: "Likely Benign",
-    description:
-      "This synonymous variant is classified as likely benign based on its prevalence in the general population and lack of association with disease in current literature.",
-  },
-  {
-    gene: "TNNT2",
-    variantDetail: "c.518CT (p.Arg173Cys)",
-    zygosity: "Heterozygous",
-    acmgClassification: "-",
-    globalAlleleFrequency: "0.0001",
-    reviewerClassification: "-",
-    description:
-      "This missense variant is classified as pathogenic. It is known to affect protein function and has been previously reported in patients with hypertrophic cardiomyopathy.",
-  },
-  {
-    gene: "TNNI3",
-    variantDetail: "c.253GA (p.Arg85His)",
-    zygosity: "Heterozygous",
-    acmgClassification: "Variant of Unknown Significance",
-    globalAlleleFrequency: "0.001",
-    reviewerClassification: "Variant of Unknown Significance",
-    description:
-      "This variant is currently classified as a variant of unknown significance. Further studies are required to understand its impact on protein function and association with cardiac conditions.",
-  },
-];
 
 const EditableRow = ({
   label,
@@ -121,25 +78,9 @@ const Tabs: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("patient-info");
   const [patientInfo, setPatientInfo] =
     useState<PatientInfo>(initialPatientInfo);
-  const [variants, setVariants] = useState<Variant[]>(initialVariants);
 
   const handleInfoChange = (key: keyof PatientInfo, value: string) => {
     setPatientInfo((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const handleVariantChange = (
-    index: number,
-    key: keyof Variant,
-    value: string
-  ) => {
-    const updatedVariants = [...variants];
-    updatedVariants[index][key] = value;
-    setVariants(updatedVariants);
-  };
-
-  const handleDeleteVariant = (index: number) => {
-    const updatedVariants = variants.filter((_, i) => i !== index);
-    setVariants(updatedVariants);
   };
 
   const tabs: Tab[] = [
@@ -249,158 +190,128 @@ const Tabs: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {variants.map((variant, index) => (
-                <tr key={index} className="border-b">
-                  <td className="px-6 py-4">{variant.gene}</td>
-                  <td className="px-6 py-4">{variant.variantDetail}</td>
-                  <td className="px-6 py-4">{variant.zygosity}</td>
-                  <td className="px-6 py-4">{variant.acmgClassification}</td>
-                  <td className="px-6 py-4">{variant.globalAlleleFrequency}</td>
-                  <td className="px-6 py-4">
-                    <button
-                      className="text-blue-500"
-                      onClick={() => {
-                        const newDetail = prompt(
-                          "Enter new variant detail",
-                          variant.variantDetail
-                        );
-                        if (newDetail)
-                          handleVariantChange(
-                            index,
-                            "variantDetail",
-                            newDetail
-                          );
-                      }}
-                    >
-                      Edit
-                    </button>{" "}
-                    |{" "}
-                    <button
-                      className="text-red-500"
-                      onClick={() => handleDeleteVariant(index)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                  <td className="px-6 py-4">
-                    {variant.reviewerClassification}
-                  </td>
-                </tr>
-              ))}
+              <tr className="border-b">
+                <td className="px-6 py-4">MYH7</td>
+                <td className="px-6 py-4">c.1503TC (p.Tyr501=)</td>
+                <td className="px-6 py-4">Heterozygous</td>
+                <td className="px-6 py-4">Likely Benign</td>
+                <td className="px-6 py-4">0.0005</td>
+                <td className="px-6 py-4">
+                  <button className="text-blue-500">Edit</button>
+                </td>
+                <td className="px-6 py-4">Likely Benign</td>
+              </tr>
+              <tr className="border-b">
+                <td className="px-6 py-4">TNNT2</td>
+                <td className="px-6 py-4">c.518CT (p.Arg173Cys)</td>
+                <td className="px-6 py-4">Heterozygous</td>
+                <td className="px-6 py-4">-</td>
+                <td className="px-6 py-4">0.0001</td>
+                <td className="px-6 py-4">
+                  <button className="text-blue-500">Edit</button>
+                </td>
+                <td className="px-6 py-4">-</td>
+              </tr>
+              <tr className="border-b">
+                <td className="px-6 py-4">TNNI3</td>
+                <td className="px-6 py-4">c.253GA (p.Arg85His)</td>
+                <td className="px-6 py-4">Heterozygous</td>
+                <td className="px-6 py-4">Variant of Unknown Significance</td>
+                <td className="px-6 py-4">0.001</td>
+                <td className="px-6 py-4">
+                  <button className="text-blue-500">Edit</button>
+                </td>
+                <td className="px-6 py-4">Variant of Unknown Significance</td>
+              </tr>
             </tbody>
           </table>
-
+    
           <div className="mt-4">
-            <h2 className="text-md font-medium text-gray-900">
-              Variant Details
-            </h2>
-
-            {variants.map((variant, index) => (
-              <div key={index} className="mt-4">
-                <p>
-                  <strong>{variant.variantDetail}:</strong>{" "}
-                  {variant.description}
-                </p>
-                <button
-                  className="text-blue-500 mt-1"
-                  onClick={() => {
-                    const newDescription = prompt(
-                      "Enter new description",
-                      variant.description
-                    );
-                    if (newDescription)
-                      handleVariantChange(index, "description", newDescription);
-                  }}
-                >
-                  Edit
-                </button>
-              </div>
-            ))}
+            <h2 className="text-md font-medium text-gray-900">Variant Details</h2>
+            
+            <div className="mt-2">
+              <p><strong>c.1503TC (p.Tyr501=):</strong> This synonymous variant is classified as likely benign based on its prevalence in the general population and lack of association with disease in current literature.</p>
+              <button className="text-blue-500 mt-1">Edit</button>
+            </div>
+            
+            <div className="mt-4">
+              <p><strong>c.518CT (p.Arg173Cys):</strong> This missense variant is classified as pathogenic. It is known to affect protein function and has been previously reported in patients with hypertrophic cardiomyopathy.</p>
+              <button className="text-blue-500 mt-1">Edit</button>
+            </div>
+    
+            <div className="mt-4">
+              <p><strong>c.253GA (p.Arg85His):</strong> This variant is currently classified as a variant of unknown significance. Further studies are required to understand its impact on protein function and association with cardiac conditions.</p>
+              <button className="text-blue-500 mt-1">Edit</button>
+            </div>
           </div>
         </div>
       ),
     },
+    
     {
       id: "recommendation",
       label: "Recommendation",
       content: (
         <div>
-          <h1 className="text-lg font-medium text-gray-900">Recommendation</h1>
-          <p className="text-sm text-gray-500">
-            This info will be displayed on the report
-          </p>
+          <p className="text-sm text-gray-500">This info will be displayed on the report</p>
           <button className="text-blue-500 mt-1">Edit</button>
-
+          
           <ul className="list-disc ml-6 mt-4 text-gray-700">
-            <li>
-              Follow-up genetic counseling is recommended to discuss the
-              implications of the detected pathogenic and uncertain variants.
-            </li>
-            <li>
-              Family screening may be advised for the pathogenic variant
-              identified in TNNT2.
-            </li>
+            <li>Follow-up genetic counseling is recommended to discuss the implications of the detected pathogenic and uncertain variants.</li>
+            <li>Family screening may be advised for the pathogenic variant identified in TNNT2.</li>
           </ul>
-
+    
           <div className="mt-6">
-            <h2 className="text-md font-medium text-gray-900">
-              Genetics Counselor's Note
-            </h2>
-            <p className="text-sm text-gray-500">
-              This info will be displayed on report
-            </p>
+            <h2 className="text-md font-medium text-gray-900">Genetics Counselor's Note</h2>
+            <p className="text-sm text-gray-500">This info will be displayed on report</p>
             <button className="text-blue-500 mt-1">Edit</button>
-
+    
             <ul className="list-disc ml-6 mt-4 text-gray-700">
-              <li>
-                <strong>MYH7 Variant:</strong> Given the benign nature of the
-                MYH7 variant, no immediate clinical action is required. However,
-                it's important to note that genetic factors are just one aspect
-                of disease risk.
-              </li>
-              <li>
-                <strong>TNNT2 Variant:</strong> The identification of the
-                pathogenic variant in TNNT2 suggests a significant risk for
-                hypertrophic cardiomyopathy. It is strongly recommended that the
-                patient engage in a detailed discussion with a cardiologist.
-                Screening of first-degree relatives may also be considered.
-              </li>
-              <li>
-                <strong>TNNI3 Variant:</strong> The uncertainty associated with
-                the TNNI3 variant warrants cautious interpretation. We recommend
-                periodic review of the scientific literature and potential
-                re-evaluation of this variant's clinical significance as new
-                data emerge.
-              </li>
+              <li><strong>MYH7 Variant:</strong> Given the benign nature of the MYH7 variant, no immediate clinical action is required. However, it's important to note that genetic factors are just one aspect of disease risk.</li>
+              <li><strong>TNNT2 Variant:</strong> The identification of the pathogenic variant in TNNT2 suggests a significant risk for hypertrophic cardiomyopathy. It is strongly recommended that the patient engage in a detailed discussion with a cardiologist. Screening of first-degree relatives may also be considered.</li>
+              <li><strong>TNNI3 Variant:</strong> The uncertainty associated with the TNNI3 variant warrants cautious interpretation. We recommend periodic review of the scientific literature and potential re-evaluation of this variant's clinical significance as new data emerge.</li>
             </ul>
           </div>
-
+    
           <div className="mt-6">
             <h2 className="text-md font-medium text-gray-900">Conclusion</h2>
-            <p className="text-sm text-gray-500">
-              This info will be displayed on report
-            </p>
+            <p className="text-sm text-gray-500">This info will be displayed on report</p>
             <button className="text-blue-500 mt-1">Edit</button>
-
+    
             <ul className="list-disc ml-6 mt-4 text-gray-700">
-              <li>
-                This report reflects the findings based on the genetic testing
-                performed with the current known scientific literature and
-                available databases. Variants are classified according to the
-                American College of Medical Genetics and Genomics (ACMG)
-                guidelines. Changes in the classification of these variants may
-                occur as new information becomes available.
-              </li>
+              <li>This report reflects the findings based on the genetic testing performed with the current known scientific literature and available databases. Variants are classified according to the American College of Medical Genetics and Genomics (ACMG) guidelines. Changes in the classification of these variants may occur as new information becomes available.</li>
             </ul>
           </div>
         </div>
       ),
     },
+    
     {
-      id: "preview-report",
-      label: "Preview Report",
-      content: <p>Preview the final report before submission.</p>,
-    },
+  id: "preview-report",
+  label: "Preview Report",
+  content: (
+    <div>
+      <p>This info will be displayed on the report</p>
+      <h2 className="text-lg font-medium text-gray-900">Executive Summary</h2>
+      <p className="text-sm text-gray-500 mt-2">
+        This genetic testing report summarizes the findings from the sample provided. The analysis was focused on identifying variants associated with hereditary cardiomyopathy. The results include information on detected genetic variants, their classification, and potential clinical implications.
+      </p>
+      
+      <div className="mt-6">
+        <h2 className="text-lg font-medium text-gray-900">Approved By</h2>
+        <ul className="list-disc ml-6 mt-2 text-gray-700">
+          <li>Rina Maheswari, M.Sc. Ph.D. - Head Laboratory</li>
+          <li>Lia Kartika, M.D. - Genetics Counselor</li>
+          <li>Putu Bagus, M.G.C - Clinical Pathology</li>
+        </ul>
+      </div>
+      
+      <div className="mt-6">
+        <button className="text-blue-500">+ Submit & Complete Report</button>
+      </div>
+    </div>
+  ),
+},
   ];
 
   return (
