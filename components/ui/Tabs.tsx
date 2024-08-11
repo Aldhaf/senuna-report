@@ -21,10 +21,10 @@ type Variant = {
   gene: string;
   variantDetail: string;
   zygosity: string;
-  acmgClassification: string;
   globalAlleleFrequency: string;
-  reviewerClassification: string;
-  description: string;
+  functionalImpact: string;
+  acmgClassification: string;
+  phenotype: string;
 };
 
 const initialPatientInfo: PatientInfo = {
@@ -39,33 +39,75 @@ const initialPatientInfo: PatientInfo = {
 const initialVariants: Variant[] = [
   {
     gene: "MYH7",
-    variantDetail: "c.1503TC (p.Tyr501=)",
+    variantDetail: "c.388T>C (p.Cys130Arg)",
     zygosity: "Heterozygous",
+    globalAlleleFrequency: "0.001",
+    functionalImpact: "Missense",
     acmgClassification: "Likely Benign",
-    globalAlleleFrequency: "0.0005",
-    reviewerClassification: "Likely Benign",
-    description:
-      "This synonymous variant is classified as likely benign based on its prevalence in the general population and lack of association with disease in current literature.",
+    phenotype: "HP:0001645",
   },
   {
     gene: "TNNT2",
-    variantDetail: "c.518CT (p.Arg173Cys)",
+    variantDetail: "c.388T>C (p.Cys130Arg)",
     zygosity: "Heterozygous",
-    acmgClassification: "-",
-    globalAlleleFrequency: "0.0001",
-    reviewerClassification: "-",
-    description:
-      "This missense variant is classified as pathogenic. It is known to affect protein function and has been previously reported in patients with hypertrophic cardiomyopathy.",
+    globalAlleleFrequency: "0.00003",
+    functionalImpact: "Missense",
+    acmgClassification: "Likely Benign",
+    phenotype: "HP:0000822",
   },
   {
-    gene: "TNNI3",
-    variantDetail: "c.253GA (p.Arg85His)",
+    gene: "APOE",
+    variantDetail: "c.388T>C (p.Cys130Arg)",
     zygosity: "Heterozygous",
-    acmgClassification: "Variant of Unknown Significance",
+    globalAlleleFrequency: "0.00003",
+    functionalImpact: "Synonymous",
+    acmgClassification: "Likely Benign",
+    phenotype: "HP:0002017",
+  },
+  {
+    gene: "LDLR",
+    variantDetail: "c.2140-5T>G",
+    zygosity: "Heterozygous",
     globalAlleleFrequency: "0.001",
-    reviewerClassification: "Variant of Unknown Significance",
-    description:
-      "This variant is currently classified as a variant of unknown significance. Further studies are required to understand its impact on protein function and association with cardiac conditions.",
+    functionalImpact: "Synonymous",
+    acmgClassification: "VUS",
+    phenotype: "HP:0003124",
+  },
+  {
+    gene: "LRRK2",
+    variantDetail: "c.6055G>A (p.Gly2019Ser)",
+    zygosity: "Heterozygous",
+    globalAlleleFrequency: "0.001",
+    functionalImpact: "Nonsense",
+    acmgClassification: "VUS",
+    phenotype: "HP:0002302",
+  },
+  {
+    gene: "BRCA1",
+    variantDetail: "c.181T>G (p.Cys61Gly)",
+    zygosity: "Heterozygous",
+    globalAlleleFrequency: "0.001",
+    functionalImpact: "Splice site",
+    acmgClassification: "Pathogenic",
+    phenotype: "HP:0009725",
+  },
+  {
+    gene: "CFTR",
+    variantDetail: "c.1521_1523delCTT (p.Phe508del)",
+    zygosity: "Heterozygous",
+    globalAlleleFrequency: "0.02",
+    functionalImpact: "Splice site",
+    acmgClassification: "Pathogenic",
+    phenotype: "HP:0005202",
+  },
+  {
+    gene: "GBA",
+    variantDetail: "c.1448T>C (p.Leu483Pro)",
+    zygosity: "Heterozygous",
+    globalAlleleFrequency: "N/A",
+    functionalImpact: "Splice site",
+    acmgClassification: "Pathogenic",
+    phenotype: "HP:0001970",
   },
 ];
 
@@ -338,7 +380,41 @@ const Tabs: React.FC = () => {
     {
       id: "select-variant",
       label: "Select Variant",
-      content: <p>Choose the variant for the test.</p>,
+      content: (
+        <div>
+          <p>Select the variant you wish to view details for.</p>
+          <table className="min-w-full text-left text-sm text-gray-500">
+            <thead>
+              <tr>
+                <th className="px-6 py-3">GENE</th>
+                <th className="px-6 py-3">VARIANT DETAIL</th>
+                <th className="px-6 py-3">ZYGOSITY</th>
+                <th className="px-6 py-3">GLOBAL ALLELE FREQUENCY</th>
+                <th className="px-6 py-3">FUNCTIONAL IMPACT</th>
+                <th className="px-6 py-3">ACMG CLASSIFICATION</th>
+                <th className="px-6 py-3">PHENOTYPE</th>
+                <th className="px-6 py-3">DETAIL</th>
+              </tr>
+            </thead>
+            <tbody>
+              {variants.map((variant, index) => (
+                <tr key={index} className="border-b">
+                  <td className="px-6 py-4">{variant.gene}</td>
+                  <td className="px-6 py-4">{variant.variantDetail}</td>
+                  <td className="px-6 py-4">{variant.zygosity}</td>
+                  <td className="px-6 py-4">{variant.globalAlleleFrequency}</td>
+                  <td className="px-6 py-4">{variant.functionalImpact}</td>
+                  <td className="px-6 py-4">{variant.acmgClassification}</td>
+                  <td className="px-6 py-4">{variant.phenotype}</td>
+                  <td className="px-6 py-4 text-blue-500 cursor-pointer">
+                    View
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ),
     },
     {
       id: "result-interpretation",
@@ -391,9 +467,7 @@ const Tabs: React.FC = () => {
                       Delete
                     </button>
                   </td>
-                  <td className="px-6 py-4">
-                    {variant.reviewerClassification}
-                  </td>
+                  <td className="px-6 py-4">{variant.functionalImpact}</td>
                 </tr>
               ))}
             </tbody>
@@ -408,17 +482,21 @@ const Tabs: React.FC = () => {
               <div key={index} className="mt-4">
                 <p>
                   <strong>{variant.variantDetail}:</strong>{" "}
-                  {variant.description}
+                  {variant.functionalImpact}
                 </p>
                 <button
                   className="text-blue-500 mt-1"
                   onClick={() => {
                     const newDescription = prompt(
                       "Enter new description",
-                      variant.description
+                      variant.functionalImpact
                     );
                     if (newDescription)
-                      handleVariantChange(index, "description", newDescription);
+                      handleVariantChange(
+                        index,
+                        "functionalImpact",
+                        newDescription
+                      );
                   }}
                 >
                   Edit
