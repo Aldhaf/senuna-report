@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Tabs from "../components/ui/Tabs";
+import Tabs from "./Tabs";
 
 const Home: React.FC = () => {
   return (
