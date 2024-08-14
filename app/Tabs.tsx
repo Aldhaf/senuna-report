@@ -2,6 +2,16 @@
 
 import { useState, ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { CirclePlus, CircleX } from "lucide-react";
 
 type Tab = {
   id: string;
@@ -205,7 +215,7 @@ const RecommendationRow = ({
 
 const Tabs: React.FC = () => {
   const router = useRouter();
-  const handleLoginButton = (event: React.FormEvent) => {
+  const handleViewRButton = (event: React.FormEvent) => {
     event.preventDefault();
     router.push("/reportview");
   };
@@ -214,7 +224,34 @@ const Tabs: React.FC = () => {
   const [patientInfo, setPatientInfo] =
     useState<PatientInfo>(initialPatientInfo);
   const [variants, setVariants] = useState<Variant[]>(initialVariants);
-  
+  const [selectedVariants, setSelectedVariants] = useState<Variant[]>([]);
+  const [additionalText, setAdditionalText] = useState<string>("");
+
+  // Handel Add, Delete, Remove di tabs Select Variant dan Result and Interpretation
+  const handleAddVariant = (index: number) => {
+    const variantToAdd = variants[index];
+    if (!selectedVariants.includes(variantToAdd)) {
+      setSelectedVariants([...selectedVariants, variantToAdd]);
+      setAdditionalText(
+        `You have added the variant ${variantToAdd.gene} - ${variantToAdd.variantDetail} to the results.`
+      );
+    }
+  };
+
+  const handleDeleteVariant = (index: number) => {
+    const updatedVariants = variants.filter((_, i) => i !== index);
+    setVariants(updatedVariants);
+  };
+
+  const handleRemoveSelectedVariant = (index: number) => {
+    const updatedSelectedVariants = selectedVariants.filter(
+      (_, i) => i !== index
+    );
+    setSelectedVariants(updatedSelectedVariants);
+    setAdditionalText(`You have removed a variant from the results.`);
+  };
+  // ================================================================================
+
   const [recommendations, setRecommendations] = useState<string[]>([
     "Follow-up genetic counseling is recommended to discuss the implications of the detected pathogenic and uncertain variants.",
     "Family screening may be advised for the pathogenic variant identified in TNNT2.",
@@ -251,11 +288,6 @@ const Tabs: React.FC = () => {
   ) => {
     const updatedVariants = [...variants];
     updatedVariants[index][key] = value;
-    setVariants(updatedVariants);
-  };
-
-  const handleDeleteVariant = (index: number) => {
-    const updatedVariants = variants.filter((_, i) => i !== index);
     setVariants(updatedVariants);
   };
 
@@ -390,36 +422,65 @@ const Tabs: React.FC = () => {
       content: (
         <div>
           <p>Select the variant you wish to view details for.</p>
-          <table className="min-w-full text-left text-sm text-gray-500">
-            <thead>
-              <tr>
-                <th className="px-6 py-3">GENE</th>
-                <th className="px-6 py-3">VARIANT DETAIL</th>
-                <th className="px-6 py-3">ZYGOSITY</th>
-                <th className="px-6 py-3">GLOBAL ALLELE FREQUENCY</th>
-                <th className="px-6 py-3">FUNCTIONAL IMPACT</th>
-                <th className="px-6 py-3">ACMG CLASSIFICATION</th>
-                <th className="px-6 py-3">PHENOTYPE</th>
-                <th className="px-6 py-3">DETAIL</th>
-              </tr>
-            </thead>
-            <tbody>
-              {variants.map((variant, index) => (
-                <tr key={index} className="border-b">
-                  <td className="px-6 py-4">{variant.gene}</td>
-                  <td className="px-6 py-4">{variant.variantDetail}</td>
-                  <td className="px-6 py-4">{variant.zygosity}</td>
-                  <td className="px-6 py-4">{variant.globalAlleleFrequency}</td>
-                  <td className="px-6 py-4">{variant.functionalImpact}</td>
-                  <td className="px-6 py-4">{variant.acmgClassification}</td>
-                  <td className="px-6 py-4">{variant.phenotype}</td>
-                  <td className="px-6 py-4 text-blue-500 cursor-pointer">
-                    View
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+          <div className="flex items-center justify-center m-10 border p-10">
+            <Table>
+              <TableHeader className="text-gray-500">
+                <TableRow>
+                  <TableHead className="px-6 py-3 text-center">GENE</TableHead>
+                  <TableHead className="px-6 py-3 text-center">
+                    VARIANT DETAIL
+                  </TableHead>
+                  <TableHead className="px-6 py-3 text-center">
+                    ZYGOSITY
+                  </TableHead>
+                  <TableHead className="px-6 py-3 text-center">
+                    GLOBAL ALLELE FREQUENCY
+                  </TableHead>
+                  <TableHead className="px-6 py-3 text-center">
+                    FUNCTIONAL IMPACT
+                  </TableHead>
+                  <TableHead className="text-center">
+                    ACMG CLASSIFICATION
+                  </TableHead>
+                  <TableHead className="text-center">PHENOTYPE</TableHead>
+                  <TableHead className="text-center">ACTION</TableHead>
+                </TableRow>
+              </TableHeader>
+
+              <TableBody>
+                {variants.map((data, index) => (
+                  <TableRow key={index} className="text-left">
+                    <TableCell>{data.gene}</TableCell>
+                    <TableCell>{data.variantDetail}</TableCell>
+                    <TableCell>{data.zygosity}</TableCell>
+                    <TableCell>{data.globalAlleleFrequency}</TableCell>
+                    <TableCell>{data.functionalImpact}</TableCell>
+                    <TableCell>{data.acmgClassification}</TableCell>
+                    <TableCell>{data.phenotype}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-row gap-1">
+                        <Button
+                          variant="ghost"
+                          className="hover:bg-violet-800 group hover:text-white"
+                          onClick={() => handleAddVariant(index)}
+                        >
+                          <CirclePlus className="w-4 h-4 hover:text-white"></CirclePlus>
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          className="hover:bg-red-800 group hover:text-white"
+                          onClick={() => handleDeleteVariant(index)}
+                        >
+                          <CircleX className="w-4 h-4 hover:text-white"></CircleX>
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       ),
     },
@@ -428,88 +489,51 @@ const Tabs: React.FC = () => {
       label: "Result and Interpretation",
       content: (
         <div>
-          <table className="min-w-full text-left text-sm text-gray-500 mt-4">
-            <thead>
-              <tr>
-                <th className="px-6 py-3">GENE</th>
-                <th className="px-6 py-3">VARIANT DETAIL</th>
-                <th className="px-6 py-3">ZYGOSITY</th>
-                <th className="px-6 py-3">ACMG CLASSIFICATION</th>
-                <th className="px-6 py-3">GLOBAL ALLELE FREQUENCY</th>
-                <th className="px-6 py-3">ACTION</th>
-                <th className="px-6 py-3">REVIEWERS CLASSIFICATION</th>
-              </tr>
-            </thead>
-            <tbody>
-              {variants.map((variant, index) => (
-                <tr key={index} className="border-b">
-                  <td className="px-6 py-4">{variant.gene}</td>
-                  <td className="px-6 py-4">{variant.variantDetail}</td>
-                  <td className="px-6 py-4">{variant.zygosity}</td>
-                  <td className="px-6 py-4">{variant.acmgClassification}</td>
-                  <td className="px-6 py-4">{variant.globalAlleleFrequency}</td>
-                  <td className="px-6 py-4">
-                    <button
-                      className="text-blue-500"
-                      onClick={() => {
-                        const newDetail = prompt(
-                          "Enter new variant detail",
-                          variant.variantDetail
-                        );
-                        if (newDetail)
-                          handleVariantChange(
-                            index,
-                            "variantDetail",
-                            newDetail
-                          );
-                      }}
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>GENE</TableHead>
+                <TableHead>VARIANT DETAIL</TableHead>
+                <TableHead>ZYGOSITY</TableHead>
+                <TableHead>ACMG CLASSIFICATION</TableHead>
+                <TableHead>GLOBAL ALLELE FREQUENCY</TableHead>
+                <TableHead>ACTION</TableHead>
+                <TableHead>REVIEWERS CLASSIFICATION</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {selectedVariants.map((variant, index) => (
+                <TableRow key={index}>
+                  <TableCell>{variant.gene}</TableCell>
+                  <TableCell>{variant.variantDetail}</TableCell>
+                  <TableCell>{variant.zygosity}</TableCell>
+                  <TableCell>{variant.acmgClassification}</TableCell>
+                  <TableCell>{variant.globalAlleleFrequency}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="ghost"
+                      className="hover:bg-red-800 group hover:text-white"
+                      onClick={() => handleRemoveSelectedVariant(index)}
                     >
-                      Edit
-                    </button>{" "}
-                    |{" "}
-                    <button
-                      className="text-red-500"
-                      onClick={() => handleDeleteVariant(index)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                  <td className="px-6 py-4">{variant.functionalImpact}</td>
-                </tr>
+                      <CircleX className="w-4 h-4 hover:text-white"></CircleX>
+                    </Button>
+                  </TableCell>
+                  <TableCell>{variant.acmgClassification}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
 
           <div className="mt-4">
-            <h2 className="text-md font-medium text-gray-900">
+            <h2 className="text-md font-semibold text-gray-900">
               Variant Details
             </h2>
 
-            {variants.map((variant, index) => (
-              <div key={index} className="mt-4">
-                <p>
-                  <strong>{variant.variantDetail}:</strong>{" "}
-                  {variant.functionalImpact}
-                </p>
-                <button
-                  className="text-blue-500 mt-1"
-                  onClick={() => {
-                    const newDescription = prompt(
-                      "Enter new description",
-                      variant.functionalImpact
-                    );
-                    if (newDescription)
-                      handleVariantChange(
-                        index,
-                        "functionalImpact",
-                        newDescription
-                      );
-                  }}
-                >
-                  Edit
-                </button>
+            {additionalText && (
+              <div className="mt-4 text-gray-700">
+                <p>{additionalText}</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       ),
@@ -595,7 +619,7 @@ const Tabs: React.FC = () => {
           </p>
 
           <div className="text-blue-500 mt-4 cursor-pointer">
-            <button onClick={handleLoginButton}>view</button>
+            <button onClick={handleViewRButton}>view</button>
             {/* <Link href="./PdfView">View</Link> */}
           </div>
 
