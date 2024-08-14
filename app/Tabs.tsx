@@ -226,15 +226,22 @@ const Tabs: React.FC = () => {
   const [variants, setVariants] = useState<Variant[]>(initialVariants);
   const [selectedVariants, setSelectedVariants] = useState<Variant[]>([]);
   const [additionalText, setAdditionalText] = useState<string>("");
+  // Use a state to store the explanatory text for each variant detail
+const [variantExplanations, setVariantExplanations] = useState<{ [key: string]: string }>({});
+
 
   // Handel Add, Delete, Remove di tabs Select Variant dan Result and Interpretation
   const handleAddVariant = (index: number) => {
     const variantToAdd = variants[index];
     if (!selectedVariants.includes(variantToAdd)) {
       setSelectedVariants([...selectedVariants, variantToAdd]);
-      setAdditionalText(
-        `You have added the variant ${variantToAdd.gene} - ${variantToAdd.variantDetail} to the results.`
-      );
+  
+      // Add or update the explanatory text for the specific variant detail
+      setVariantExplanations(prevExplanations => ({
+        ...prevExplanations,
+        [variantToAdd.variantDetail]:
+        `This synonymous variant is classified as likely benign based on its prevalence in the general population and lack of association with disease in current literature.\n`
+      }));
     }
   };
 
@@ -244,10 +251,18 @@ const Tabs: React.FC = () => {
   };
 
   const handleRemoveSelectedVariant = (index: number) => {
+    const variantToRemove = selectedVariants[index];
     const updatedSelectedVariants = selectedVariants.filter(
       (_, i) => i !== index
     );
     setSelectedVariants(updatedSelectedVariants);
+  
+    // Remove the explanatory text for the specific variant detail
+    setVariantExplanations(prevExplanations => {
+      const { [variantToRemove.variantDetail]: _, ...remainingExplanations } = prevExplanations;
+      return remainingExplanations;
+    });
+  
     setAdditionalText(`You have removed a variant from the results.`);
   };
   // ================================================================================
@@ -528,12 +543,19 @@ const Tabs: React.FC = () => {
             <h2 className="text-md font-semibold text-gray-900">
               Variant Details
             </h2>
-
-            {additionalText && (
-              <div className="mt-4 text-gray-700">
-                <p>{additionalText}</p>
+            <div style={{ whiteSpace: "pre-line" }}>
+              {Object.entries(variantExplanations).map(([variantDetail, explanation], index) => (
+                <div key={index} className="mt-4 text-gray-700">
+                  <p className="font-bold">{variantDetail}</p>
+                  <p>{explanation}</p>
+                </div>
+              ))}
               </div>
-            )}
+          </div>
+          <div>
+            <button className="mt-2 text-blue-500">
+              Edit
+            </button>
           </div>
         </div>
       ),
