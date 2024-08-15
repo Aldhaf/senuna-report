@@ -227,7 +227,9 @@ const Tabs: React.FC = () => {
   const [selectedVariants, setSelectedVariants] = useState<Variant[]>([]);
   const [additionalText, setAdditionalText] = useState<string>("");
   // Use a state to store the explanatory text for each variant detail
-const [variantExplanations, setVariantExplanations] = useState<{ [key: string]: string }>({});
+  const [editingVariant, setEditingVariant] = useState<string | null>(null);
+  const [editText, setEditText] = useState<string>("");
+  const [variantExplanations, setVariantExplanations] = useState<{ [key: string]: string }>({});
 
 
   // Handel Add, Delete, Remove di tabs Select Variant dan Result and Interpretation
@@ -264,6 +266,23 @@ const [variantExplanations, setVariantExplanations] = useState<{ [key: string]: 
     });
   
     setAdditionalText(`You have removed a variant from the results.`);
+  };
+
+  const handleEditVariant = (variantDetail: string) => {
+    setEditingVariant(variantDetail);
+    setEditText(variantExplanations[variantDetail] || "");
+  };
+  
+  const handleSaveEdit = (variantDetail: string) => {
+    setVariantExplanations(prevExplanations => ({
+      ...prevExplanations,
+      [variantDetail]: editText
+    }));
+    setEditingVariant(null);
+  };
+  
+  const handleCancelEdit = () => {
+    setEditingVariant(null);
   };
   // ================================================================================
 
@@ -547,15 +566,46 @@ const [variantExplanations, setVariantExplanations] = useState<{ [key: string]: 
               {Object.entries(variantExplanations).map(([variantDetail, explanation], index) => (
                 <div key={index} className="mt-4 text-gray-700">
                   <p className="font-bold">{variantDetail}</p>
-                  <p>{explanation}</p>
+                    {editingVariant === variantDetail ? (
+                      <div>
+                        <textarea
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                          rows={4}
+                          className="w-full border border-gray-300 p-2"
+                        />
+                        <div className="mt-2">
+                          <Button
+                            variant="ghost"
+                            className="text-blue-600 hover:underline mr-2"
+                            onClick={() => handleSaveEdit(variantDetail)}
+                          >
+                          Save
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            className="text-blue-600 hover:underline"
+                            onClick={handleCancelEdit}
+                          >
+                          Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <p>{explanation}</p>
+                        <Button
+                          variant="ghost"
+                          className="text-blue-600 hover:underline"
+                          onClick={() => handleEditVariant(variantDetail)}
+                        >
+                        Edit
+                        </Button>
+                      </div>
+                    )}
                 </div>
               ))}
-              </div>
-          </div>
-          <div>
-            <button className="mt-2 text-blue-500">
-              Edit
-            </button>
+            </div>
           </div>
         </div>
       ),
