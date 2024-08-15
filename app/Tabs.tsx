@@ -236,54 +236,61 @@ const Tabs: React.FC = () => {
   const handleAddVariant = (index: number) => {
     const variantToAdd = variants[index];
     if (!selectedVariants.includes(variantToAdd)) {
-      setSelectedVariants([...selectedVariants, variantToAdd]);
-  
-      // Add or update the explanatory text for the specific variant detail
-      setVariantExplanations(prevExplanations => ({
-        ...prevExplanations,
-        [variantToAdd.variantDetail]:
-        `This synonymous variant is classified as likely benign based on its prevalence in the general population and lack of association with disease in current literature.\n`
-      }));
-    }
-  };
+        setSelectedVariants([...selectedVariants, variantToAdd]);
 
-  const handleDeleteVariant = (index: number) => {
+        // Add or update the explanatory text for the specific variant detail
+        setVariantExplanations(prevExplanations => ({
+            ...prevExplanations,
+            [variantToAdd.variantDetail]:
+            `This synonymous variant is classified as likely benign based on its prevalence in the general population and lack of association with disease in current literature.\n`
+        }));
+    }
+};
+
+const handleDeleteVariant = (index: number) => {
     const updatedVariants = variants.filter((_, i) => i !== index);
     setVariants(updatedVariants);
-  };
+};
 
-  const handleRemoveSelectedVariant = (index: number) => {
+const handleRemoveSelectedVariant = (index: number) => {
     const variantToRemove = selectedVariants[index];
     const updatedSelectedVariants = selectedVariants.filter(
-      (_, i) => i !== index
+        (_, i) => i !== index
     );
     setSelectedVariants(updatedSelectedVariants);
-  
-    // Remove the explanatory text for the specific variant detail
-    setVariantExplanations(prevExplanations => {
-      const { [variantToRemove.variantDetail]: _, ...remainingExplanations } = prevExplanations;
-      return remainingExplanations;
-    });
-  
-    setAdditionalText(`You have removed a variant from the results.`);
-  };
 
-  const handleEditVariant = (variantDetail: string) => {
+    // Count how many instances of the same variant detail remain in the table
+    const remainingInstances = updatedSelectedVariants.filter(
+        variant => variant.variantDetail === variantToRemove.variantDetail
+    ).length;
+
+    // Only remove the explanatory text if no instances of the variant detail remain
+    if (remainingInstances === 0) {
+        setVariantExplanations(prevExplanations => {
+            const { [variantToRemove.variantDetail]: _, ...remainingExplanations } = prevExplanations;
+            return remainingExplanations;
+        });
+    }
+
+    setAdditionalText(`You have removed a variant from the results.`);
+};
+
+const handleEditVariant = (variantDetail: string) => {
     setEditingVariant(variantDetail);
     setEditText(variantExplanations[variantDetail] || "");
-  };
-  
-  const handleSaveEdit = (variantDetail: string) => {
+};
+
+const handleSaveEdit = (variantDetail: string) => {
     setVariantExplanations(prevExplanations => ({
-      ...prevExplanations,
-      [variantDetail]: editText
+        ...prevExplanations,
+        [variantDetail]: editText
     }));
     setEditingVariant(null);
-  };
-  
-  const handleCancelEdit = () => {
+};
+
+const handleCancelEdit = () => {
     setEditingVariant(null);
-  };
+};
   // ================================================================================
 
   const [recommendations, setRecommendations] = useState<string[]>([
