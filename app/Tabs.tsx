@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, ReactNode } from "react";
+import { useState, ReactNode, useRef } from "react";
 import { useRouter } from "next/navigation";
+import html2pdf from 'html2pdf.js';
+
 import {
   Table,
   TableBody,
@@ -12,6 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { CirclePlus, CircleX } from "lucide-react";
+import ReportView from "./reportview/page";
 
 type Tab = {
   id: string;
@@ -219,6 +222,38 @@ const Tabs: React.FC = () => {
     event.preventDefault();
     router.push("/reportview");
   };
+  const contentRef = useRef(null);
+  const [IsHidden, setIsHidden] = useState(false);
+  
+  const convertToPdf = async () => {
+    const content = contentRef.current;
+
+    try {
+      // Pastikan elemen terlihat saat proses pembuatan PDF
+      setIsHidden(true);
+
+      const options = {
+        filename: 'my-document.pdf',
+        margin: 1,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: {
+          unit: 'in',
+          format: 'letter',
+          orientation: 'portrait',
+        },
+      };
+  
+      // Menggunakan html2pdf untuk mengonversi konten menjadi PDF
+      await html2pdf().set(options).from(content).save();
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      // Sembunyikan elemen setelah pembuatan PDF selesai
+      setIsHidden(false);
+    }
+  }; 
+
 
   const [activeTab, setActiveTab] = useState<string>("patient-info");
   const [patientInfo, setPatientInfo] =
@@ -722,7 +757,10 @@ const handleCancelEdit = () => {
           </div>
 
           <div className="mt-6 flex justify-between items-center">
-            <button className="text-blue-500">
+            <div className={`${IsHidden ? 'block' : 'hidden'}`} ref={contentRef}>
+              <ReportView />
+            </div>
+            <button onClick={convertToPdf} className="text-blue-500">
               + Submit & Complete Report
             </button>
           </div>
