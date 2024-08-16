@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Tabs from "./Tabs";
 
 const Home: React.FC = () => {
   return (
@@ -7,7 +6,6 @@ const Home: React.FC = () => {
       <Head>
         <title>Tabs Example</title>
       </Head>
-      <Tabs />
     </div>
   );
 };
