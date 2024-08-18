@@ -33,22 +33,22 @@ const PreviewReport = ({
 
   const convertToPdf = async () => {
     const content = contentRef.current;
-
+  
     try {
       setIsHidden(true);
-
+  
       const options = {
         filename: "my-document.pdf",
-        margin: 1,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
+        margin: 0,  // Ubah margin ke 0 jika ingin hasil yang lebih akurat
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: { scale: 2, useCORS: true, logging: true },
         jsPDF: {
           unit: "mm",
-          format: "a4",
-          orientation: "portrait",
+          format: "a4",  // Gunakan format A4
+          orientation: "portrait",  // Sesuaikan orientasi dengan kebutuhan
         },
       };
-
+  
       // Menggunakan html2pdf untuk mengonversi konten menjadi PDF
       await html2pdf().set(options).from(content).save();
     } catch (error) {
@@ -58,6 +58,7 @@ const PreviewReport = ({
       setIsHidden(false);
     }
   };
+  
 
   return (
     <div>
