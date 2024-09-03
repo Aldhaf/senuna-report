@@ -110,16 +110,9 @@ function Page() {
   const [editingVariant, setEditingVariant] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
 
-  const [recommendations, setRecommendations] = useState<string[]>([
-    "Follow-up genetic counseling is recommended to discuss the implications of the detected pathogenic and uncertain variants.",
-    "Family screening may be advised for the pathogenic variant identified in TNNT2.",
-  ]);
+  const [recommendations, setRecommendations] = useState<string[]>([""]);
 
-  const [counselorNotes, setCounselorNotes] = useState<string[]>([
-    "MYH7 Variant: Given the benign nature of the MYH7 variant, no immediate clinical action is required. However, it's important to note that genetic factors are just one aspect of disease risk.",
-    "TNNT2 Variant: The identification of the pathogenic variant in TNNT2 suggests a significant risk for hypertrophic cardiomyopathy. It is strongly recommended that the patient engage in a detailed discussion with a cardiologist. Screening of first-degree relatives may also be considered.",
-    "TNNI3 Variant: The uncertainty associated with the TNNI3 variant warrants cautious interpretation. We recommend periodic review of the scientific literature and potential re-evaluation of this variant's clinical significance as new data emerge.",
-  ]);
+  const [counselorNotes, setCounselorNotes] = useState<string[]>([""]);
 
   const [conclusion, setConclusion] = useState<string>(
     "This report reflects the findings based on the genetic testing performed with the current known scientific literature and available databases. Variants are classified according to the American College of Medical Genetics and Genomics (ACMG) guidelines. Changes in the classification of these variants may occur as new information becomes available."

@@ -187,12 +187,12 @@ export default function ReportView() {
 
         <div className="bg-gray-200 p-4 rounded-md mb-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-2">
-            Counselor's Notes
+            Counselor is Notes
           </h2>
           <ul className="list-disc pl-5 text-gray-600">
             <li>
               <strong>MYH7 Variant:</strong> Given the benign nature of the MYH7
-              variant, no immediate clinical action is required. However, it's
+              variant, no immediate clinical action is required. However, it is
               important to note that genetic factors are just one aspect of
               disease risk.
             </li>
@@ -207,7 +207,7 @@ export default function ReportView() {
               <strong>TNNI3 Variant:</strong> The uncertainty associated with
               the TNNI3 variant warrants cautious interpretation. We recommend
               periodic review of the scientific literature and potential
-              re-evaluation of this variant's clinical significance as new data
+              re-evaluation of this variant is clinical significance as new data
               emerge.
             </li>
           </ul>

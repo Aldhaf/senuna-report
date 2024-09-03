@@ -1,6 +1,18 @@
 "use client";
 
 import RecommendationRow from "@/components/RecommendationRow";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 type RecommendationsProps = {
   recommendations: string[];
@@ -20,10 +32,11 @@ function Recommendation({
   setConclusion,
 }: RecommendationsProps) {
   const handleAddRecommendation = () => {
-    const newRec = prompt("Enter new recommendation");
-    if (newRec) {
-      setRecommendations([...recommendations, newRec]);
-    }
+    // const newRec = prompt("Enter new recommendation");
+    // if (newRec) {
+    //   setRecommendations([...recommendations, newRec]);
+    // }
+    setOpenModal(true);
   };
 
   const handleEditRecommendation = (index: number, newContent: string) => {
@@ -33,7 +46,7 @@ function Recommendation({
   };
 
   const handleAddCounselorNote = () => {
-    const newNote = prompt("Enter new counselor's note");
+    const newNote = prompt("Enter new counselor is note");
     if (newNote) {
       setCounselorNotes([...counselorNotes, newNote]);
     }
@@ -47,6 +60,18 @@ function Recommendation({
 
   const handleEditConclusion = (newContent: string) => {
     setConclusion(newContent);
+  };
+
+  const [openModal, setOpenModal] = useState(false);
+  const [newRec, setNewRec] = useState("");
+
+  const saveNewRecommendation = () => {
+    setRecommendations([...recommendations, newRec]);
+
+    // Sintax untuk ke database
+
+    setOpenModal(false);
+    setNewRec("");
   };
 
   return (
@@ -71,13 +96,13 @@ function Recommendation({
 
       <div className="mt-6">
         <h2 className="text-md font-medium text-gray-900">
-          Genetics Counselor's Note
+          Genetics Counselor is Note
         </h2>
         <p className="text-sm text-gray-500">
           This info will be displayed on report
         </p>
         <button className="text-blue-500 mt-1" onClick={handleAddCounselorNote}>
-          Add Counselor's Note
+          Add Counselor is Note
         </button>
 
         <ul className="list-disc ml-6 mt-4 text-gray-700">
@@ -100,6 +125,33 @@ function Recommendation({
         </p>
         <RecommendationRow content={conclusion} onEdit={handleEditConclusion} />
       </div>
+
+      {openModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-65 ">
+          <Card>
+            <CardHeader>
+              <CardTitle>Add Recommendation</CardTitle>
+              <CardDescription>Recommendation for analysis</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-4">
+                <Label>Recommendation</Label>
+                <Textarea
+                  value={newRec}
+                  onChange={(e) => setNewRec(e.target.value)}
+                ></Textarea>
+              </div>
+            </CardContent>
+            <CardFooter className="flex flex-row justify-between">
+              <Button onClick={saveNewRecommendation}> Save</Button>
+              <Button variant={"ghost"} onClick={() => setOpenModal(false)}>
+                {" "}
+                Cancel
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
