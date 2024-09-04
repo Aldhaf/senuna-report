@@ -52,7 +52,12 @@ const PreviewReport = ({
       // Menggunakan html2pdf untuk mengonversi konten menjadi PDF
       await html2pdf().set(options).from(content).save();
     } catch (error) {
-      console.error(error.message);
+      // Safely handle the error using type guards or assertions
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error("An unexpected error occurred", error);
+      }
     } finally {
       // Sembunyikan elemen setelah pembuatan PDF selesai
       setIsHidden(false);

@@ -220,13 +220,13 @@ export default function ReportView() {
           <ul className="list-disc pl-5 text-gray-600">
             <li>
               BRCA1 c.5266dupC: Smith et al., Journal of Medical Genetics, 2023.
-              "Impact of recurrent BRCA1 mutations in breast cancer
-              susceptibility."
+              {/* "Impact of recurrent BRCA1 mutations in breast cancer
+              susceptibility." */}
             </li>
             <li>
               MLH1 c.3503_3504delTA: Lee et al., Clinical Cancer Research, 2022.
-              "Genetic landscape of Lynch syndrome: early detection and new
-              treatments."
+              {/* "Genetic landscape of Lynch syndrome: early detection and new
+              treatments." */}
             </li>
           </ul>
         </div>

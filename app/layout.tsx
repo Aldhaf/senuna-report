@@ -16,7 +16,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <div>
+          <h1 className="text-lg font-medium text-gray-900 text-center mt-5">this is landing page</h1>
+        </div>
+        {children}
+        </body>
     </html>
   );
 }

@@ -50,10 +50,10 @@ function SelectVariant({
     }
   };
 
-  const handleDeleteVariant = (index: number) => {
-    const updatedVariants = variants.filter((_, i) => i !== index);
-    setVariants(updatedVariants);
-  };
+  // const handleDeleteVariant = (index: number) => {
+  //   const updatedVariants = variants.filter((_, i) => i !== index);
+  //   setVariants(updatedVariants);
+  // };
 
   return (
     <div>
@@ -101,10 +101,9 @@ function SelectVariant({
                     </Button>
                     <Button
                       variant="ghost"
-                      className="hover:bg-red-800 group hover:text-white"
-                      onClick={() => handleDeleteVariant(index)}
+                      className="hover:bg-green-500 group hover:text-white"
                     >
-                      <CircleX className="w-4 h-4 hover:text-white"></CircleX>
+                      View
                     </Button>
                   </div>
                 </TableCell>

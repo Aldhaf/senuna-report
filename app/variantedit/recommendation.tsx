@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { cpSync } from "fs";
 import { useState } from "react";
 
 type RecommendationsProps = {
@@ -36,7 +37,7 @@ function Recommendation({
     // if (newRec) {
     //   setRecommendations([...recommendations, newRec]);
     // }
-    setOpenModal(true);
+    setOpenModalAddRec(true);
   };
 
   const handleEditRecommendation = (index: number, newContent: string) => {
@@ -46,10 +47,11 @@ function Recommendation({
   };
 
   const handleAddCounselorNote = () => {
-    const newNote = prompt("Enter new counselor is note");
-    if (newNote) {
-      setCounselorNotes([...counselorNotes, newNote]);
-    }
+    // const newNote = prompt("Enter new counselor is note");
+    // if (newNote) {
+    //   setCounselorNotes([...counselorNotes, newNote]);
+    // }
+    setOpenModalAddCouns(true);
   };
 
   const handleEditCounselorNote = (index: number, newContent: string) => {
@@ -61,18 +63,27 @@ function Recommendation({
   const handleEditConclusion = (newContent: string) => {
     setConclusion(newContent);
   };
-
-  const [openModal, setOpenModal] = useState(false);
+  //Modal Pop up
+  const [openModalAddRec, setOpenModalAddRec] = useState(false);
+  const [openModalAddCouns, setOpenModalAddCouns] = useState(false);
+  //Data Set Up Modal
   const [newRec, setNewRec] = useState("");
+  const [newNote, setNewNot] = useState("");
 
   const saveNewRecommendation = () => {
     setRecommendations([...recommendations, newRec]);
 
     // Sintax untuk ke database
 
-    setOpenModal(false);
+    setOpenModalAddRec(false);
     setNewRec("");
   };
+
+  const saveNewNoteCons = () => {
+    setCounselorNotes([...counselorNotes, newNote]);
+    setOpenModalAddCouns(false);
+    setNewNot("");
+  }
 
   return (
     <div>
@@ -126,7 +137,7 @@ function Recommendation({
         <RecommendationRow content={conclusion} onEdit={handleEditConclusion} />
       </div>
 
-      {openModal && (
+      {openModalAddRec && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-65 ">
           <Card>
             <CardHeader>
@@ -144,13 +155,40 @@ function Recommendation({
             </CardContent>
             <CardFooter className="flex flex-row justify-between">
               <Button onClick={saveNewRecommendation}> Save</Button>
-              <Button variant={"ghost"} onClick={() => setOpenModal(false)}>
+              <Button variant={"ghost"} onClick={() => setOpenModalAddRec(false)}>
                 {" "}
                 Cancel
               </Button>
             </CardFooter>
           </Card>
         </div>
+      )}
+
+      {openModalAddCouns && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-65 ">
+        <Card>
+          <CardHeader>
+            <CardTitle>Add Counselor Notes</CardTitle>
+            <CardDescription>Description Counselor</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-4">
+              <Label>Counselor Notes</Label>
+              <Textarea
+                value={newNote}
+                onChange={(e) => setNewNot(e.target.value)}
+              ></Textarea>
+            </div>
+          </CardContent>
+          <CardFooter className="flex flex-row justify-between">
+            <Button onClick={saveNewNoteCons}> Save</Button>
+            <Button variant={"ghost"} onClick={() => setOpenModalAddCouns(false)}>
+              {" "}
+              Cancel
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
       )}
     </div>
   );
