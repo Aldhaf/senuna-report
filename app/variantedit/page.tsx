@@ -8,6 +8,7 @@ import SelectVariant from "./select-variant";
 import ResultInterpretation from "./result-interpretation";
 import Recommendation from "./recommendation";
 import PreviewReport from "./preview-report";
+import VariantEditUploader from "./variant-edit-vcf";
 
 type Tab = {
   id: string;
@@ -153,6 +154,11 @@ function Page() {
       ),
     },
     {
+      id: "select-variant-vcf",
+      label: "Select Variant VCF",
+      content: <VariantEditUploader />,
+    },
+    {
       id: "result-interpretation",
       label: "Result and Interpretation",
       content: (
@@ -215,13 +221,7 @@ function Page() {
 
       <div className="p-4">
         {tabs.map(
-          (tab) =>
-            activeTab === tab.id && (
-              <div key={tab.id}>
-                <h1>{tab.label}</h1>
-                {tab.content}
-              </div>
-            )
+          (tab) => activeTab === tab.id && <div key={tab.id}>{tab.content}</div>
         )}
       </div>
     </div>
