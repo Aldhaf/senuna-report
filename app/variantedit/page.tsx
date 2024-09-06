@@ -11,6 +11,10 @@ import ResultInterpretation from "./result-interpretation";
 import Recommendation from "./recommendation";
 // import PreviewReport from "./preview-report";
 
+const PreviewReport = dynamic(() => import("../variantedit/preview-report"), {
+  ssr: false,
+});
+
 const VariantEditUploader = dynamic(
   () => import("../variantedit/variant-edit-vcf"),
   { ssr: false }
@@ -194,17 +198,17 @@ function Page() {
         />
       ),
     },
-    // {
-    //   id: "preview-report",
-    //   label: "Preview Report",
-    //   content: (
-    //     <PreviewReport
-    //       executiveSummary={executiveSummary}
-    //       approvedBy={approvedBy}
-    //       setApprovedBy={setApprovedBy}
-    //     />
-    //   ),
-    // },
+    {
+      id: "preview-report",
+      label: "Preview Report",
+      content: (
+        <PreviewReport
+          executiveSummary={executiveSummary}
+          approvedBy={approvedBy}
+          setApprovedBy={setApprovedBy}
+        />
+      ),
+    },
   ];
 
   return (
