@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useState } from "react";
 import {
   Table,
@@ -14,6 +15,15 @@ function VariantEditUploader() {
   const [columns, setColumns] = useState<string[]>([]);
   const [data, setData] = useState<string[][]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Ensure the code runs only on the client-side
+    if (typeof window !== "undefined" && typeof self !== "undefined") {
+      // Client-side code
+      console.log(window);
+      console.log(document);
+    }
+  }, []);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

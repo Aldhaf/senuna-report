@@ -1,5 +1,7 @@
 "use client";
 
+import dynamic from "next/dynamic";
+
 import { useState } from "react";
 import { ReactNode } from "react";
 import PatientInformation from "./patient-information";
@@ -7,8 +9,12 @@ import TestingMaterial from "./testing-material";
 import SelectVariant from "./select-variant";
 import ResultInterpretation from "./result-interpretation";
 import Recommendation from "./recommendation";
-import PreviewReport from "./preview-report";
-import VariantEditUploader from "./variant-edit-vcf";
+// import PreviewReport from "./preview-report";
+
+const VariantEditUploader = dynamic(
+  () => import("../variantedit/variant-edit-vcf"),
+  { ssr: false }
+);
 
 type Tab = {
   id: string;
@@ -188,17 +194,17 @@ function Page() {
         />
       ),
     },
-    {
-      id: "preview-report",
-      label: "Preview Report",
-      content: (
-        <PreviewReport
-          executiveSummary={executiveSummary}
-          approvedBy={approvedBy}
-          setApprovedBy={setApprovedBy}
-        />
-      ),
-    },
+    // {
+    //   id: "preview-report",
+    //   label: "Preview Report",
+    //   content: (
+    //     <PreviewReport
+    //       executiveSummary={executiveSummary}
+    //       approvedBy={approvedBy}
+    //       setApprovedBy={setApprovedBy}
+    //     />
+    //   ),
+    // },
   ];
 
   return (
