@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/table";
 
 function VariantEditUploader() {
-  const [columns, setColumns] = useState([]);
-  const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
+  const [columns, setColumns] = useState<string[]>([]);
+  const [data, setData] = useState<string[][]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
 
     // Reset state when a new file is uploaded
     setColumns([]);
@@ -28,7 +28,7 @@ function VariantEditUploader() {
 
       // Read the file as text
       reader.onload = (e) => {
-        const vcfText = e.target.result;
+        const vcfText = e.target?.result as string;
 
         // If file is empty or unreadable, show error
         if (!vcfText || vcfText.trim() === "") {
@@ -39,7 +39,9 @@ function VariantEditUploader() {
         const lines = vcfText.split("\n");
 
         // Find the line that starts with #CHROM to extract the column headers
-        const headerLine = lines.find((line) => line.startsWith("#CHROM"));
+        const headerLine = lines.find((line: string) =>
+          line.startsWith("#CHROM")
+        );
         if (headerLine) {
           const parsedColumns = headerLine.slice(1).trim().split("\t"); // Get columns and remove #
           setColumns(parsedColumns);
@@ -50,10 +52,10 @@ function VariantEditUploader() {
 
         // Get data lines (after the header)
         const dataLines = lines.filter(
-          (line) => !line.startsWith("#") && line.trim() !== ""
+          (line: string) => !line.startsWith("#") && line.trim() !== ""
         );
 
-        const parsedData = dataLines.map((line) => {
+        const parsedData = dataLines.map((line: string) => {
           return line.split("\t"); // Split each data line by tabs
         });
 
